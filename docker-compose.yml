@@ -1,0 +1,33 @@
+# https://docs.docker.com/compose/compose-file
+version: "3.6"
+services:
+  nginx:
+    image: gertcuykens/nginx-grpc:latest
+    ports:
+    - "8443:8443"
+    secrets:
+    - tls.crt
+    - tls.key
+    configs:
+    - source: nginx.conf
+      target: /etc/nginx/nginx.conf
+      mode: 0440
+    volumes:
+    - data:/root/data
+    deploy:
+      replicas: 1
+
+secrets:
+  tls.crt:
+    external: true
+  tls.key:
+    external: true
+
+configs:
+  nginx.conf:
+    external: true
+
+volumes:
+  data:
+    external: true
+    name: data-grpc
